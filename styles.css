@@ -270,6 +270,11 @@ h1 {
   background: rgba(232, 197, 103, 0.12);
 }
 
+.icon-home {
+  color: #ba96ff;
+  background: rgba(186, 150, 255, 0.12);
+}
+
 .source-name {
   margin: 0 0 5px;
   color: var(--muted);
@@ -533,6 +538,65 @@ h1 {
   font-size: 12px;
 }
 
+.home-card {
+  grid-column: span 2;
+  min-height: 292px;
+}
+
+.home-card .card-heading {
+  margin-bottom: 19px;
+}
+
+.home-entities {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 0 0 17px;
+}
+
+.home-reading,
+.home-placeholder {
+  min-height: 88px;
+  padding: 13px 14px;
+  background: rgba(4, 14, 19, 0.19);
+  border-radius: 7px;
+}
+
+.home-placeholder {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.home-reading-label {
+  margin: 0 0 11px;
+  color: var(--muted);
+  font-size: 11px;
+}
+
+.home-reading-value {
+  margin: 0;
+  color: var(--soft);
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.home-reading-value small {
+  margin-left: 4px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.home-note {
+  margin: auto 0 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .about {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -597,6 +661,10 @@ h1 {
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .home-entities {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 680px) {
@@ -628,6 +696,14 @@ h1 {
   .github-card,
   .calendar-card {
     min-height: 370px;
+  }
+
+  .home-card {
+    min-height: 390px;
+  }
+
+  .home-entities {
+    grid-template-columns: 1fr;
   }
 
   .card-heading {

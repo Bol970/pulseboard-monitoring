@@ -6,6 +6,7 @@ const API_URLS = {
   github: "https://api.github.com/repos/immich-app/immich",
   githubRelease: "https://api.github.com/repos/immich-app/immich/releases/latest",
   calendar: "/api/calendar",
+  homeAssistant: "/api/home-assistant",
 };
 
 const WEATHER_LABELS = {
@@ -225,6 +226,57 @@ async function updateCalendar() {
   }
 }
 
+function displayHomeState(entity) {
+  if (entity.type === "contact") {
+    return entity.state === "on" ? "Открыта" : "Закрыта";
+  }
+  return entity.state;
+}
+
+async function updateHomeAssistant() {
+  setStatus("home-card", "loading", "Загрузка");
+  const readings = document.querySelector("#home-entities");
+  const note = document.querySelector("#home-note");
+
+  try {
+    const data = await fetchJson(API_URLS.homeAssistant);
+    readings.replaceChildren(
+      ...data.entities.map((entity) => {
+        const item = document.createElement("div");
+        item.className = "home-reading";
+
+        const label = document.createElement("p");
+        label.className = "home-reading-label";
+        label.textContent = entity.label;
+
+        const value = document.createElement("p");
+        value.className = "home-reading-value";
+        value.textContent = displayHomeState(entity);
+
+        if (entity.unit) {
+          const unit = document.createElement("small");
+          unit.textContent = entity.unit;
+          value.append(unit);
+        }
+
+        item.append(label, value);
+        return item;
+      }),
+    );
+    note.textContent = `Получено из Home Assistant: ${shortTime.format(new Date(data.fetchedAt))}`;
+    setStatus("home-card", "ready", "Онлайн");
+  } catch (error) {
+    const placeholder = document.createElement("p");
+    placeholder.className = "home-placeholder";
+    placeholder.textContent =
+      "Для подключения нужен секрет HOME_ASSISTANT_TOKEN в Vercel.";
+    readings.replaceChildren(placeholder);
+    note.textContent = "Токен хранится только в защищенных настройках Vercel.";
+    setStatus("home-card", "error", "Не настроено");
+    console.error("Home Assistant request failed:", error);
+  }
+}
+
 async function updateDashboard() {
   refreshButton.disabled = true;
   refreshButton.classList.add("is-loading");
@@ -234,6 +286,7 @@ async function updateDashboard() {
     updateMarket(),
     updateGithub(),
     updateCalendar(),
+    updateHomeAssistant(),
   ]);
 
   refreshTime.textContent = `Сегодня, ${shortTime.format(new Date())}`;

@@ -7,7 +7,7 @@
     <title>PulseBoard | Панель мониторинга</title>
     <meta
       name="description"
-      content="Панель мониторинга с данными о погоде, криптовалютах, GitHub и событиях календаря."
+      content="Панель мониторинга с данными о погоде, криптовалютах, GitHub, календаре и Home Assistant."
     >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,8 +36,8 @@
           <p class="eyebrow">Мониторинг в реальном времени</p>
           <h1 id="dashboard-title">Единый экран<br>важных показателей</h1>
           <p class="hero-text">
-            Панель объединяет четыре источника данных: погоду, рыночные
-            котировки, состояние open source-проекта и события календаря.
+            Панель объединяет пять источников данных: погоду, рыночные
+            котировки, open source-проект, события календаря и умный дом.
           </p>
         </div>
 
@@ -212,24 +212,51 @@
             <span aria-hidden="true">&nearr;</span>
           </a>
         </article>
+
+        <article class="data-card home-card" id="home-card">
+          <div class="card-heading">
+            <div class="icon icon-home" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="m4 11 8-7 8 7"/>
+                <path d="M6.5 9.5V20h11V9.5"/>
+                <path d="M10 20v-5h4v5"/>
+              </svg>
+            </div>
+            <div>
+              <p class="source-name">Home Assistant REST API</p>
+              <h2>Дом на bols65.ru</h2>
+            </div>
+            <span class="status loading" data-status>Загрузка</span>
+          </div>
+          <div class="home-entities" id="home-entities" aria-label="Датчики умного дома">
+            <p class="home-placeholder">Подключаем Home Assistant...</p>
+          </div>
+          <p class="home-note" id="home-note">
+            Доступ выполняется сервером Vercel, токен скрыт от браузера.
+          </p>
+          <a class="source-link" href="https://ha.bols65.ru/" target="_blank" rel="noopener">
+            Открыть Home Assistant
+            <span aria-hidden="true">&nearr;</span>
+          </a>
+        </article>
       </section>
 
       <section class="about" aria-label="О панели">
         <div>
           <p class="eyebrow">Как это работает</p>
-          <h2>Три API и календарь.</h2>
+          <h2>Данные из сервисов и дома.</h2>
         </div>
         <p>
-          Браузер параллельно запрашивает три публичных JSON API. Четвертый источник
-          отличается: serverless-функция читает публичный iCalendar-файл Google
-          Calendar и извлекает ближайшие события. Каждый источник обновляется независимо.
+          Публичные API загружаются параллельно, календарь разбирается из `.ics`.
+          Для Home Assistant отдельная serverless-функция обращается к вашему дому
+          с защищенным токеном Vercel, который не передается в браузер.
         </p>
       </section>
     </main>
 
     <footer class="site-footer">
       <p>PulseBoard &middot; Учебный проект по разработке с AI</p>
-      <p>Данные предоставляются публичными API и Google Calendar</p>
+      <p>Данные предоставляются API, Google Calendar и Home Assistant</p>
     </footer>
   </body>
 </html>
