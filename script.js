@@ -187,6 +187,11 @@ function calendarSourceLabel(source) {
   return source === "school" ? "ProfileSchool" : "Праздник";
 }
 
+function calendarWhen(event, dateFormatter) {
+  const time = event.time ? `, ${event.time}` : "";
+  return `${dateFormatter.format(calendarDate(event.date))}${time} · ${calendarSourceLabel(event.source)}`;
+}
+
 async function updateCalendar() {
   setStatus("calendar-card", "loading", "Загрузка");
   try {
@@ -200,7 +205,7 @@ async function updateCalendar() {
 
     document.querySelector("#calendar-event").textContent = nextEvent.title;
     document.querySelector("#calendar-date").textContent =
-      `${fullDate.format(calendarDate(nextEvent.date))} · ${calendarSourceLabel(nextEvent.source)}`;
+      calendarWhen(nextEvent, fullDate);
     connection.textContent = data.schoolConnected
       ? "ProfileSchool подключен"
       : data.schoolConfigured
@@ -218,9 +223,8 @@ async function updateCalendar() {
         title.textContent = event.title;
 
         const time = document.createElement("time");
-        time.dateTime = event.date;
-        time.textContent =
-          `${dayMonth.format(calendarDate(event.date))} · ${calendarSourceLabel(event.source)}`;
+        time.dateTime = event.time ? `${event.date}T${event.time}` : event.date;
+        time.textContent = calendarWhen(event, dayMonth);
         row.append(title, time);
         return row;
       }),

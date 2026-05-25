@@ -1,6 +1,7 @@
 const GOOGLE_CALENDAR_URL =
   "https://calendar.google.com/calendar/ical/ru.russian%23holiday%40group.v.calendar.google.com/public/basic.ics";
 const PROFILE_SCHOOL_URL = "https://www.profileschool.ru";
+const DASHBOARD_TIME_ZONE = "Europe/Moscow";
 
 function unfoldIcalendar(text) {
   return text.replace(/\r?\n[ \t]/g, "").split(/\r?\n/);
@@ -23,12 +24,43 @@ function unescapeText(value) {
     .replace(/\\\\/g, "\\");
 }
 
-function formatIcalDate(value) {
+function parseIcalStart(value) {
   const compactDate = value.slice(0, 8);
   if (!/^\d{8}$/.test(compactDate)) {
     return null;
   }
-  return `${compactDate.slice(0, 4)}-${compactDate.slice(4, 6)}-${compactDate.slice(6)}`;
+
+  const date = `${compactDate.slice(0, 4)}-${compactDate.slice(4, 6)}-${compactDate.slice(6)}`;
+  const timeMatch = value.match(/^\d{8}T(\d{2})(\d{2})(\d{2})?/);
+  if (timeMatch && value.endsWith("Z")) {
+    const instant = new Date(
+      `${date}T${timeMatch[1]}:${timeMatch[2]}:${timeMatch[3] || "00"}Z`,
+    );
+    const localParts = Object.fromEntries(
+      new Intl.DateTimeFormat("en-CA", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+        timeZone: DASHBOARD_TIME_ZONE,
+      })
+        .formatToParts(instant)
+        .filter((part) => part.type !== "literal")
+        .map((part) => [part.type, part.value]),
+    );
+
+    return {
+      date: `${localParts.year}-${localParts.month}-${localParts.day}`,
+      time: `${localParts.hour}:${localParts.minute}`,
+    };
+  }
+
+  return {
+    date,
+    time: timeMatch ? `${timeMatch[1]}:${timeMatch[2]}` : null,
+  };
 }
 
 function parseEvents(calendarText, source) {
@@ -40,10 +72,10 @@ function parseEvents(calendarText, source) {
     if (line === "BEGIN:VEVENT") {
       currentEvent = [];
     } else if (line === "END:VEVENT" && currentEvent) {
-      const date = formatIcalDate(propertyValue(currentEvent, "DTSTART"));
+      const start = parseIcalStart(propertyValue(currentEvent, "DTSTART"));
       const title = unescapeText(propertyValue(currentEvent, "SUMMARY"));
-      if (date && title) {
-        events.push({ date, title, source });
+      if (start && title) {
+        events.push({ ...start, title, source });
       }
       currentEvent = null;
     } else if (currentEvent) {
@@ -147,7 +179,11 @@ module.exports = async function calendarHandler(request, response) {
     const today = new Date().toISOString().slice(0, 10);
     const upcoming = [...googleEvents, ...schoolEvents]
       .filter((event) => event.date >= today)
-      .sort((first, second) => first.date.localeCompare(second.date))
+      .sort((first, second) =>
+        `${first.date}T${first.time || "00:00"}`.localeCompare(
+          `${second.date}T${second.time || "00:00"}`,
+        ),
+      )
       .slice(0, 5);
 
     response.setHeader(
