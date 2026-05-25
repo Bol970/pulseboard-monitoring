@@ -3,7 +3,7 @@ const API_URLS = {
     "https://api.open-meteo.com/v1/forecast?latitude=55.7522&longitude=37.6156&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Europe%2FMoscow",
   market:
     "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true&include_last_updated_at=true",
-  github: "https://api.github.com/repos/vercel/next.js",
+  github: "https://api.github.com/repos/immich-app/immich",
   calendar: "/api/calendar",
 };
 

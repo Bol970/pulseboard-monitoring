@@ -4,7 +4,7 @@
 
 - Open-Meteo API: текущая погода в Москве.
 - CoinGecko API: цены Bitcoin и Ethereum и изменение за 24 часа.
-- GitHub REST API: показатели репозитория `vercel/next.js`.
+- GitHub REST API: показатели репозитория `immich-app/immich`.
 - Google Calendar iCalendar: ближайшие события календаря `Праздники России`.
 
 Три JSON API запрашиваются из браузера. Для дополнительного задания используется
