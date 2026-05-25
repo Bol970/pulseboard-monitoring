@@ -532,8 +532,18 @@ h1 {
   color: var(--muted);
 }
 
+.calendar-connection {
+  margin: auto 0 9px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.calendar-connection.connected {
+  color: var(--green);
+}
+
 .calendar-method {
-  margin: auto 0 18px;
+  margin: 0 0 18px;
   color: var(--muted);
   font-size: 12px;
 }

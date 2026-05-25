@@ -183,20 +183,30 @@ function calendarDate(value) {
   return new Date(`${value}T00:00:00Z`);
 }
 
+function calendarSourceLabel(source) {
+  return source === "school" ? "ProfileSchool" : "Праздник";
+}
+
 async function updateCalendar() {
   setStatus("calendar-card", "loading", "Загрузка");
   try {
     const data = await fetchJson(API_URLS.calendar);
     const [nextEvent, ...followingEvents] = data.upcoming;
+    const connection = document.querySelector("#calendar-connection");
 
     if (!nextEvent) {
       throw new Error("Calendar has no upcoming events");
     }
 
     document.querySelector("#calendar-event").textContent = nextEvent.title;
-    document.querySelector("#calendar-date").textContent = fullDate.format(
-      calendarDate(nextEvent.date),
-    );
+    document.querySelector("#calendar-date").textContent =
+      `${fullDate.format(calendarDate(nextEvent.date))} · ${calendarSourceLabel(nextEvent.source)}`;
+    connection.textContent = data.schoolConnected
+      ? "ProfileSchool подключен"
+      : data.schoolConfigured
+        ? "ProfileSchool: не удалось подключиться"
+        : "ProfileSchool: требуется настройка";
+    connection.classList.toggle("connected", data.schoolConnected);
 
     const list = document.querySelector("#calendar-events");
     list.replaceChildren(
@@ -209,7 +219,8 @@ async function updateCalendar() {
 
         const time = document.createElement("time");
         time.dateTime = event.date;
-        time.textContent = dayMonth.format(calendarDate(event.date));
+        time.textContent =
+          `${dayMonth.format(calendarDate(event.date))} · ${calendarSourceLabel(event.source)}`;
         row.append(title, time);
         return row;
       }),
@@ -221,6 +232,9 @@ async function updateCalendar() {
       "Календарь временно недоступен";
     document.querySelector("#calendar-date").textContent = "--";
     document.querySelector("#calendar-events").replaceChildren();
+    document.querySelector("#calendar-connection").textContent =
+      "ProfileSchool: состояние неизвестно";
+    document.querySelector("#calendar-connection").classList.remove("connected");
     setStatus("calendar-card", "error", "Ошибка");
     console.error("Calendar request failed:", error);
   }

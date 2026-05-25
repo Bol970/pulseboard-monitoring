@@ -5,14 +5,16 @@
 - Open-Meteo API: текущая погода в Москве.
 - CoinGecko API: цены Bitcoin и Ethereum и изменение за 24 часа.
 - GitHub REST API: показатели репозитория `immich-app/immich` и его последний релиз.
-- Google Calendar iCalendar: ближайшие события календаря `Праздники России`.
+- iCalendar: события календаря `Праздники России` и приватного календаря ProfileSchool.
 - Home Assistant REST API: домашние датчики энергии, температуры, освещенности
   и контакта двери.
 
 Три публичных JSON API запрашиваются из браузера. Для дополнительного задания используется
-иной подход: функция Vercel [`api/calendar.js`](api/calendar.js) загружает публичный
-календарный `.ics`-фид, разбирает события и отдает карточке ближайшие праздники;
-для этих источников API-ключи не требуются.
+иной подход: функция Vercel [`api/calendar.js`](api/calendar.js) объединяет публичный
+календарный `.ics`-фид с приватным фидом ProfileSchool и отдает карточке ближайшие
+события. Для ProfileSchool задаются секретные переменные Vercel
+`PROFILE_SCHOOL_EMAIL` и `PROFILE_SCHOOL_PASSWORD`; учетные данные не попадают
+в браузер или GitHub. События, показанные на публичной панели, будут видны посетителям.
 
 Home Assistant подключен через функцию [`api/home-assistant.js`](api/home-assistant.js).
 Ей требуется секретная переменная Vercel `HOME_ASSISTANT_TOKEN`; токен не попадает
