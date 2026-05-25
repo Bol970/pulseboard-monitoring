@@ -39,8 +39,7 @@ a {
 }
 
 .site-header,
-.page,
-.site-footer {
+.page {
   width: min(1240px, calc(100% - 48px));
   margin: 0 auto;
 }
@@ -209,6 +208,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 21px;
+  padding-bottom: 46px;
 }
 
 .data-card {
@@ -597,48 +597,6 @@ h1 {
   font-size: 12px;
 }
 
-.about {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 42px;
-  margin: 48px 0 44px;
-  padding: 42px 49px;
-  border: 1px solid var(--card-line);
-  border-radius: 12px;
-}
-
-.about .eyebrow {
-  margin-bottom: 12px;
-}
-
-.about h2 {
-  margin: 0;
-  font-size: 27px;
-  letter-spacing: -0.05em;
-}
-
-.about > p {
-  margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.75;
-}
-
-.site-footer {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 25px 0 31px;
-  color: var(--muted);
-  border-top: 1px solid rgba(200, 225, 216, 0.08);
-  font-size: 12px;
-}
-
-.site-footer p {
-  margin: 0;
-}
-
 @keyframes spin {
   from {
     transform: rotate(0);
@@ -669,8 +627,7 @@ h1 {
 
 @media (max-width: 680px) {
   .site-header,
-  .page,
-  .site-footer {
+  .page {
     width: min(100% - 32px, 520px);
   }
 
@@ -682,9 +639,9 @@ h1 {
     font-size: clamp(37px, 13vw, 45px);
   }
 
-  .cards,
-  .about {
+  .cards {
     display: block;
+    padding-bottom: 22px;
   }
 
   .data-card {
@@ -710,17 +667,4 @@ h1 {
     gap: 11px;
   }
 
-  .about {
-    margin: 35px 0;
-    padding: 28px 23px;
-  }
-
-  .about > p {
-    margin-top: 23px;
-  }
-
-  .site-footer {
-    display: grid;
-    line-height: 1.7;
-  }
 }
