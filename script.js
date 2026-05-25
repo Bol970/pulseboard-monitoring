@@ -4,6 +4,7 @@ const API_URLS = {
   market:
     "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true&include_last_updated_at=true",
   github: "https://api.github.com/repos/vercel/next.js",
+  calendar: "/api/calendar",
 };
 
 const WEATHER_LABELS = {
@@ -43,6 +44,17 @@ const dateTime = new Intl.DateTimeFormat("ru-RU", {
   month: "short",
   hour: "2-digit",
   minute: "2-digit",
+});
+const fullDate = new Intl.DateTimeFormat("ru-RU", {
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+const dayMonth = new Intl.DateTimeFormat("ru-RU", {
+  day: "numeric",
+  month: "short",
+  timeZone: "UTC",
 });
 
 const refreshButton = document.querySelector("#refresh-button");
@@ -159,11 +171,63 @@ async function updateGithub() {
   }
 }
 
+function calendarDate(value) {
+  return new Date(`${value}T00:00:00Z`);
+}
+
+async function updateCalendar() {
+  setStatus("calendar-card", "loading", "Загрузка");
+  try {
+    const data = await fetchJson(API_URLS.calendar);
+    const [nextEvent, ...followingEvents] = data.upcoming;
+
+    if (!nextEvent) {
+      throw new Error("Calendar has no upcoming events");
+    }
+
+    document.querySelector("#calendar-event").textContent = nextEvent.title;
+    document.querySelector("#calendar-date").textContent = fullDate.format(
+      calendarDate(nextEvent.date),
+    );
+
+    const list = document.querySelector("#calendar-events");
+    list.replaceChildren(
+      ...followingEvents.slice(0, 2).map((event) => {
+        const row = document.createElement("p");
+        row.className = "calendar-item";
+
+        const title = document.createElement("span");
+        title.textContent = event.title;
+
+        const time = document.createElement("time");
+        time.dateTime = event.date;
+        time.textContent = dayMonth.format(calendarDate(event.date));
+        row.append(title, time);
+        return row;
+      }),
+    );
+
+    setStatus("calendar-card", "ready", "Онлайн");
+  } catch (error) {
+    document.querySelector("#calendar-event").textContent =
+      "Календарь временно недоступен";
+    document.querySelector("#calendar-date").textContent = "--";
+    document.querySelector("#calendar-events").replaceChildren();
+    setStatus("calendar-card", "error", "Ошибка");
+    console.error("Calendar request failed:", error);
+  }
+}
+
 async function updateDashboard() {
   refreshButton.disabled = true;
   refreshButton.classList.add("is-loading");
 
-  await Promise.allSettled([updateWeather(), updateMarket(), updateGithub()]);
+  await Promise.allSettled([
+    updateWeather(),
+    updateMarket(),
+    updateGithub(),
+    updateCalendar(),
+  ]);
 
   refreshTime.textContent = `Сегодня, ${shortTime.format(new Date())}`;
   refreshButton.disabled = false;

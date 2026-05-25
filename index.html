@@ -7,7 +7,7 @@
     <title>PulseBoard | Панель мониторинга</title>
     <meta
       name="description"
-      content="Панель мониторинга с данными о погоде, криптовалютах и активности GitHub."
+      content="Панель мониторинга с данными о погоде, криптовалютах, GitHub и событиях календаря."
     >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,8 +36,8 @@
           <p class="eyebrow">Мониторинг в реальном времени</p>
           <h1 id="dashboard-title">Единый экран<br>важных показателей</h1>
           <p class="hero-text">
-            Панель объединяет три независимых публичных источника данных:
-            погоду, рыночные котировки и состояние open source-проекта.
+            Панель объединяет четыре источника данных: погоду, рыночные
+            котировки, состояние open source-проекта и события календаря.
           </p>
         </div>
 
@@ -169,24 +169,57 @@
             <span aria-hidden="true">&nearr;</span>
           </a>
         </article>
+
+        <article class="data-card calendar-card" id="calendar-card">
+          <div class="card-heading">
+            <div class="icon icon-calendar" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 3v4m10-4v4M4.5 9.5h15"/>
+                <rect x="4.5" y="5" width="15" height="15.5" rx="2"/>
+                <path d="M8.5 13h3v3h-3z"/>
+              </svg>
+            </div>
+            <div>
+              <p class="source-name">Google Calendar / iCalendar</p>
+              <h2>Праздники России</h2>
+            </div>
+            <span class="status loading" data-status>Загрузка</span>
+          </div>
+          <p class="next-event-label">Ближайшее событие</p>
+          <h3 class="calendar-event" id="calendar-event">Загружаем календарь...</h3>
+          <p class="calendar-date" id="calendar-date">--</p>
+          <div class="calendar-events" id="calendar-events" aria-label="Следующие события">
+            <p class="calendar-placeholder">Читаем публичный .ics-фид</p>
+          </div>
+          <p class="calendar-method">Новый подход: обработка календарного файла `.ics`</p>
+          <a
+            class="source-link"
+            href="https://calendar.google.com/calendar/ical/ru.russian%23holiday%40group.v.calendar.google.com/public/basic.ics"
+            target="_blank"
+            rel="noopener"
+          >
+            Открыть календарь
+            <span aria-hidden="true">&nearr;</span>
+          </a>
+        </article>
       </section>
 
       <section class="about" aria-label="О панели">
         <div>
           <p class="eyebrow">Как это работает</p>
-          <h2>Три API. Одна панель.</h2>
+          <h2>Три API и календарь.</h2>
         </div>
         <p>
-          Браузер параллельно запрашивает публичные JSON API и показывает свежие
-          показатели. Если один источник временно недоступен, остальные продолжают
-          обновляться независимо.
+          Браузер параллельно запрашивает три публичных JSON API. Четвертый источник
+          отличается: serverless-функция читает публичный iCalendar-файл Google
+          Calendar и извлекает ближайшие события. Каждый источник обновляется независимо.
         </p>
       </section>
     </main>
 
     <footer class="site-footer">
       <p>PulseBoard &middot; Учебный проект по разработке с AI</p>
-      <p>Данные предоставляются соответствующими публичными API</p>
+      <p>Данные предоставляются публичными API и Google Calendar</p>
     </footer>
   </body>
 </html>

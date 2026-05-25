@@ -207,7 +207,7 @@ h1 {
 
 .cards {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 21px;
 }
 
@@ -263,6 +263,11 @@ h1 {
 .icon-github {
   color: #bccbd2;
   background: rgba(188, 203, 210, 0.1);
+}
+
+.icon-calendar {
+  color: var(--yellow);
+  background: rgba(232, 197, 103, 0.12);
 }
 
 .source-name {
@@ -452,6 +457,59 @@ h1 {
   font-size: 12px;
 }
 
+.next-event-label {
+  margin: 2px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.calendar-event {
+  min-height: 27px;
+  margin: 0 0 7px;
+  font-size: 22px;
+  line-height: 1.25;
+  letter-spacing: -0.04em;
+}
+
+.calendar-date {
+  margin: 0 0 18px;
+  color: var(--yellow);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.calendar-events {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+.calendar-item,
+.calendar-placeholder {
+  min-height: 39px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 10px 12px;
+  background: rgba(4, 14, 19, 0.19);
+  border-radius: 7px;
+  color: var(--soft);
+  font-size: 12px;
+}
+
+.calendar-item time {
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.calendar-method {
+  margin: auto 0 18px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .about {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -516,11 +574,6 @@ h1 {
   .cards {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-
-  .github-card {
-    grid-column: span 2;
-    min-height: 360px;
-  }
 }
 
 @media (max-width: 680px) {
@@ -549,7 +602,8 @@ h1 {
     padding: 22px 20px;
   }
 
-  .github-card {
+  .github-card,
+  .calendar-card {
     min-height: 370px;
   }
 
