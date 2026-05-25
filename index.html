@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#08151d">
+    <title>PulseBoard | Панель мониторинга</title>
+    <meta
+      name="description"
+      content="Панель мониторинга с данными о погоде, криптовалютах и активности GitHub."
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="PulseBoard, на главную">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>PulseBoard</span>
+      </a>
+      <div class="live-pill">
+        <span class="live-dot" aria-hidden="true"></span>
+        Live data
+      </div>
+    </header>
+
+    <main class="page">
+      <section class="hero" aria-labelledby="dashboard-title">
+        <div>
+          <p class="eyebrow">Мониторинг в реальном времени</p>
+          <h1 id="dashboard-title">Единый экран<br>важных показателей</h1>
+          <p class="hero-text">
+            Панель объединяет три независимых публичных источника данных:
+            погоду, рыночные котировки и состояние open source-проекта.
+          </p>
+        </div>
+
+        <aside class="control-panel" aria-label="Управление обновлением данных">
+          <p class="control-label">Последнее обновление</p>
+          <p class="refresh-time" id="refresh-time">Получаем данные...</p>
+          <button class="refresh-button" id="refresh-button" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 11a8.1 8.1 0 0 0-14.7-4.5L3 9m0 0V3m0 6h6M4 13a8.1 8.1 0 0 0 14.7 4.5L21 15m0 0v6m0-6h-6"/>
+            </svg>
+            Обновить показатели
+          </button>
+          <p class="auto-note">Автообновление каждые 5 минут</p>
+        </aside>
+      </section>
+
+      <section class="cards" aria-label="Источники мониторинга">
+        <article class="data-card weather-card" id="weather-card">
+          <div class="card-heading">
+            <div class="icon icon-weather" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M7 16.8h10a4 4 0 0 0 .3-8 5.6 5.6 0 0 0-10.5 1.4A3.4 3.4 0 0 0 7 16.8Z"/>
+                <path d="M8.5 20h.1m3.4 0h.1m3.4 0h.1"/>
+              </svg>
+            </div>
+            <div>
+              <p class="source-name">Open-Meteo API</p>
+              <h2>Погода в Москве</h2>
+            </div>
+            <span class="status loading" data-status>Загрузка</span>
+          </div>
+          <div class="primary-value">
+            <span id="weather-temperature">--</span><small>°C</small>
+          </div>
+          <p class="value-caption" id="weather-description">Загружаем прогноз...</p>
+          <dl class="metrics metrics-three">
+            <div>
+              <dt>Влажность</dt>
+              <dd id="weather-humidity">--</dd>
+            </div>
+            <div>
+              <dt>Ветер</dt>
+              <dd id="weather-wind">--</dd>
+            </div>
+            <div>
+              <dt>Время</dt>
+              <dd id="weather-time">--</dd>
+            </div>
+          </dl>
+          <a class="source-link" href="https://open-meteo.com/" target="_blank" rel="noopener">
+            Источник данных
+            <span aria-hidden="true">&nearr;</span>
+          </a>
+        </article>
+
+        <article class="data-card market-card" id="market-card">
+          <div class="card-heading">
+            <div class="icon icon-market" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 17 10 11l4 4 6-8"/>
+                <path d="M14 7h6v6"/>
+              </svg>
+            </div>
+            <div>
+              <p class="source-name">CoinGecko API</p>
+              <h2>Крипторынок</h2>
+            </div>
+            <span class="status loading" data-status>Загрузка</span>
+          </div>
+          <div class="coin-list">
+            <div class="coin">
+              <div>
+                <p class="coin-symbol">BTC</p>
+                <p class="coin-name">Bitcoin</p>
+              </div>
+              <div class="coin-result">
+                <strong id="bitcoin-price">--</strong>
+                <span class="change" id="bitcoin-change">--</span>
+              </div>
+            </div>
+            <div class="coin">
+              <div>
+                <p class="coin-symbol">ETH</p>
+                <p class="coin-name">Ethereum</p>
+              </div>
+              <div class="coin-result">
+                <strong id="ethereum-price">--</strong>
+                <span class="change" id="ethereum-change">--</span>
+              </div>
+            </div>
+          </div>
+          <p class="market-note" id="market-time">Изменение цены за 24 часа</p>
+          <a class="source-link" href="https://www.coingecko.com/en/api" target="_blank" rel="noopener">
+            Источник данных
+            <span aria-hidden="true">&nearr;</span>
+          </a>
+        </article>
+
+        <article class="data-card github-card" id="github-card">
+          <div class="card-heading">
+            <div class="icon icon-github" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 19c-4 1.3-4-2-5-2.5M14.5 22v-3.3c0-1 .1-1.4-.5-2.1 2.8-.3 5.7-1.4 5.7-6.2a4.8 4.8 0 0 0-1.3-3.4 4.5 4.5 0 0 0-.1-3.4s-1-.3-3.5 1.3a12.4 12.4 0 0 0-6.3 0C6 3.3 5 3.6 5 3.6A4.5 4.5 0 0 0 4.9 7a4.8 4.8 0 0 0-1.3 3.4c0 4.8 2.9 5.9 5.7 6.2-.5.5-.6 1-.6 1.8V22"/>
+              </svg>
+            </div>
+            <div>
+              <p class="source-name">GitHub REST API</p>
+              <h2>vercel / next.js</h2>
+            </div>
+            <span class="status loading" data-status>Загрузка</span>
+          </div>
+          <div class="primary-value repos-value">
+            <span id="github-stars">--</span>
+            <small>звезд</small>
+          </div>
+          <dl class="metrics">
+            <div>
+              <dt>Forks</dt>
+              <dd id="github-forks">--</dd>
+            </div>
+            <div>
+              <dt>Issues</dt>
+              <dd id="github-issues">--</dd>
+            </div>
+          </dl>
+          <p class="repo-date" id="github-updated">Обновление репозитория: --</p>
+          <a class="source-link" href="https://github.com/vercel/next.js" target="_blank" rel="noopener">
+            Открыть репозиторий
+            <span aria-hidden="true">&nearr;</span>
+          </a>
+        </article>
+      </section>
+
+      <section class="about" aria-label="О панели">
+        <div>
+          <p class="eyebrow">Как это работает</p>
+          <h2>Три API. Одна панель.</h2>
+        </div>
+        <p>
+          Браузер параллельно запрашивает публичные JSON API и показывает свежие
+          показатели. Если один источник временно недоступен, остальные продолжают
+          обновляться независимо.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>PulseBoard &middot; Учебный проект по разработке с AI</p>
+      <p>Данные предоставляются соответствующими публичными API</p>
+    </footer>
+  </body>
+</html>
