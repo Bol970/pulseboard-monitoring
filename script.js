@@ -4,6 +4,7 @@ const API_URLS = {
   market:
     "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true&include_last_updated_at=true",
   github: "https://api.github.com/repos/immich-app/immich",
+  githubRelease: "https://api.github.com/repos/immich-app/immich/releases/latest",
   calendar: "/api/calendar",
 };
 
@@ -150,7 +151,10 @@ async function updateMarket() {
 async function updateGithub() {
   setStatus("github-card", "loading", "Загрузка");
   try {
-    const data = await fetchJson(API_URLS.github);
+    const [data, release] = await Promise.all([
+      fetchJson(API_URLS.github),
+      fetchJson(API_URLS.githubRelease),
+    ]);
     document.querySelector("#github-stars").textContent = number.format(
       data.stargazers_count,
     );
@@ -162,8 +166,11 @@ async function updateGithub() {
     );
     document.querySelector("#github-updated").textContent =
       `Обновление репозитория: ${dateTime.format(new Date(data.updated_at))}`;
+    document.querySelector("#github-release").textContent = release.tag_name;
+    document.querySelector("#github-release-link").href = release.html_url;
     setStatus("github-card", "ready", "Онлайн");
   } catch (error) {
+    document.querySelector("#github-release").textContent = "--";
     document.querySelector("#github-updated").textContent =
       "Источник временно недоступен";
     setStatus("github-card", "error", "Ошибка");

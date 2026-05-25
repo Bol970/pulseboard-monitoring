@@ -451,6 +451,29 @@ h1 {
   margin-bottom: 14px;
 }
 
+.release-row {
+  min-height: 43px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 14px;
+  padding: 11px 13px;
+  background: rgba(49, 210, 141, 0.09);
+  border-radius: 7px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.release-row strong {
+  color: var(--green);
+  font-size: 14px;
+}
+
+.release-row:hover strong {
+  text-decoration: underline;
+}
+
 .repo-date {
   margin: 0 0 auto;
   color: var(--muted);
